@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ~/qompassai/valkey/create_zenodo.py
+# --------------------------------------
+# Copyright (C) 2025 Qompass AI, All rights reserved
+
 import re
 import json
 import subprocess
@@ -6,12 +10,10 @@ import os
 import sys
 import tempfile
 
-# Check if README.md exists
 if not os.path.exists('README.md'):
     print("Error: README.md does not exist in the current directory.")
     sys.exit(1)
 
-# Read README.md content
 try:
     with open('README.md', 'r') as file:
         readme_content = file.read()
@@ -19,17 +21,14 @@ except Exception as e:
     print(f"Error reading README.md: {e}")
     sys.exit(1)
 
-# Extract title (first line starting with # )
 title_match = re.search(r'^# (.+)$', readme_content, re.MULTILINE)
 title = title_match.group(1) if title_match else ""
 
-# Extract Description section content
 section_name = "Description"
 pattern = rf'^## {re.escape(section_name)}\n(.+?)(?=^## |\Z)'
 section_match = re.search(pattern, readme_content, re.MULTILINE | re.DOTALL)
 description = section_match.group(1).strip() if section_match else ""
 
-# Convert markdown description to HTML using pandoc
 with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.md') as tmp_md:
     tmp_md.write(description)
     tmp_md_path = tmp_md.name
@@ -37,10 +36,8 @@ with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.md') as tmp_md
 html_description_path = tmp_md_path.replace('.md', '.html')
 
 try:
-    # Run pandoc to convert markdown to html
     subprocess.run(['pandoc', '-f', 'markdown', '-t', 'html', tmp_md_path, '-o', html_description_path], check=True)
     
-    # Read the html description
     with open(html_description_path, 'r') as f:
         html_description = f.read()
 except Exception as e:
@@ -50,11 +47,9 @@ except Exception as e:
         os.remove(html_description_path)
     sys.exit(1)
 
-# Get the current folder name as repo name if git remote isn't set yet
 try:
     git_remote_url = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], text=True).strip()
     
-    # Extract org and repo from git remote url
     org = "qompassai"  # default org override
     repo = "your-repository-name"
     
@@ -63,11 +58,9 @@ try:
         org = match.group(1)
         repo = match.group(2)
 except Exception as e:
-    # If git remote not set, use current directory name
     org = "qompassai"
     repo = os.path.basename(os.getcwd())
 
-# Build zenodo json
 zenodo_json = {
     "title": title,
     "description": html_description,
@@ -95,7 +88,6 @@ zenodo_json = {
     ]
 }
 
-# Write to .zenodo.json
 try:
     with open('.zenodo.json', 'w') as f:
         json.dump(zenodo_json, f, indent=2)
@@ -103,7 +95,6 @@ try:
 except Exception as e:
     print(f"Error writing .zenodo.json: {e}")
 
-# Clean up temporary files
 try:
     os.remove(tmp_md_path)
     os.remove(html_description_path)
