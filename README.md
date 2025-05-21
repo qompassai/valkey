@@ -9,6 +9,8 @@
 <h3> Qompass AI on Valkey </h3>
 
 ![Repository Views](https://komarev.com/ghpvc/?username=qompassai-valkey)
+![GitHub all releases](https://img.shields.io/github/downloads/qompassai/valkey/total?style=flat-square)
+
 
   <a href="https://valkey.io/">
   <img src="https://img.shields.io/badge/Valkey-00ADEF?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMDAwMDAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2M0LjQxIDAgOCAzLjU5IDggOHMtMy41OSA4LTggOC04LTMuNTktOC04IDMuNTktOCA4LTh6Ii8+PC9zdmc+" alt="Valkey">
